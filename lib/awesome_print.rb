@@ -20,8 +20,9 @@ unless defined?(AwesomePrint::Inspector)
   # Load the following under normal circumstances as well as in Rails
   # console when required from ~/.irbrc or ~/.pryrc.
   #
-  require File.dirname(__FILE__) + "/awesome_print/ext/active_record"  if defined?(ActiveRecord)  || AwesomePrint.rails_console?
-  require File.dirname(__FILE__) + "/awesome_print/ext/active_support" if defined?(ActiveSupport) || AwesomePrint.rails_console?
+  require File.dirname(__FILE__) + "/awesome_print/ext/active_record"   if defined?(ActiveRecord)   || AwesomePrint.rails_console?
+  require File.dirname(__FILE__) + "/awesome_print/ext/active_support"  if defined?(ActiveSupport)  || AwesomePrint.rails_console?
+  require File.dirname(__FILE__) + "/awesome_print/ext/active_resource" if defined?(ActiveResource) || AwesomePrint.rails_console?
   #
   # Load remaining extensions.
   #
