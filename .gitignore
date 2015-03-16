@@ -13,12 +13,20 @@ tmtags
 ## VIM
 *.swp
 
+## RUBYMINE
+.idea
+
 ## PROJECT::GENERAL
 coverage
 rdoc
 pkg
+.ruby-version
+gemfiles/*.gemfile.lock
 Gemfile.lock
 
-## PROJECT::SPECIFIC
+## PROJECT::RVM
 .rvmrc
-.idea
+
+# PROJECT::RBENV
+.ruby-gemset
+.awesome-print/

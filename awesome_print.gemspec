@@ -7,7 +7,7 @@ require "rake"
 
 Gem::Specification.new do |s|
   s.name        = "awesome_print"
-  s.version     = "1.2.0"
+  s.version     = "1.6.2"
 # s.platform    = Gem::Platform::RUBY
   s.authors     = "Michael Dvorkin"
   s.date        = Time.now.strftime("%Y-%m-%d")
@@ -23,6 +23,10 @@ Gem::Specification.new do |s|
   s.executables   = []
   s.require_paths = ["lib"]
 
-  s.add_development_dependency "rspec",  ">= 2.6.0"
+  s.add_development_dependency "rspec",  ">= 3.0.0"
+  s.add_development_dependency "appraisal"
   s.add_development_dependency "fakefs", ">= 0.2.1"
+  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'nokogiri', '>= 1.6.5'
+  s.add_development_dependency 'codeclimate-test-reporter'
 end
