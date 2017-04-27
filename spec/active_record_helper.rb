@@ -7,7 +7,7 @@ if ExtVerifier.has_rails?
   end
 
   # Establish connection to in-memory SQLite DB
-  ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+  ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
 
   # Create the users table
   ActiveRecord::Migration.verbose = false
@@ -18,7 +18,13 @@ if ExtVerifier.has_rails?
     t.datetime :created_at
   end
 
+  ActiveRecord::Migration.create_table :emails do |t|
+    t.references :user
+    t.string :email_address
+  end
+
   # Create models
-  class User < ActiveRecord::Base; end
+  class User < ActiveRecord::Base; has_many :emails; end
   class SubUser < User; end
+  class Email < ActiveRecord::Base; belongs_to :user; end
 end

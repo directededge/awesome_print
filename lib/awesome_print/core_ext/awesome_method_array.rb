@@ -1,4 +1,4 @@
-# Copyright (c) 2010-2013 Michael Dvorkin
+# Copyright (c) 2010-2016 Michael Dvorkin and contributors
 #
 # Awesome Print is freely distributable under the terms of MIT license.
 # See LICENSE file or http://www.opensource.org/licenses/mit-license.php
@@ -12,24 +12,24 @@
 #
 # If you could think of a better way please let me know :-)
 #
-class Array #:nodoc:
-  [ :-, :& ].each do |operator|
-    original_operator = instance_method(operator)
+module AwesomeMethodArray #:nodoc:
 
-    define_method operator do |*args|
-      arr = original_operator.bind(self).call(*args)
-      if self.instance_variable_defined?('@__awesome_methods__')
-        arr.instance_variable_set('@__awesome_methods__', self.instance_variable_get('@__awesome_methods__'))
-        arr.sort! { |a, b| a.to_s <=> b.to_s }  # Need the block since Ruby 1.8.x can't sort arrays of symbols.
-      end
-      arr
+  def -(_other_ary)
+    super.tap do |arr|
+      arr.instance_variable_set(:@__awesome_methods__, self.instance_variable_get(:@__awesome_methods__))
     end
   end
+
+  def &(_other_ary)
+    super.tap do |arr|
+      arr.instance_variable_set(:@__awesome_methods__, self.instance_variable_get(:@__awesome_methods__))
+    end
+  end
+
   #
   # Intercepting Array#grep needs a special treatment since grep accepts
   # an optional block.
   #
-  alias :original_grep :grep
   def grep(pattern, &blk)
     #
     # The following looks rather insane and I've sent numerous hours trying
@@ -55,9 +55,9 @@ class Array #:nodoc:
     # the comment :-)
     #
     arr = unless blk
-      original_grep(pattern)
+      super(pattern)
     else
-      original_grep(pattern) do |match|
+      super(pattern) do |match|
         #
         # The binding can only be used with Ruby-defined methods, therefore
         # we must rescue potential "ArgumentError: Can't create Binding from
@@ -72,10 +72,8 @@ class Array #:nodoc:
         yield match
       end
     end
-    if self.instance_variable_defined?('@__awesome_methods__')
-      arr.instance_variable_set('@__awesome_methods__', self.instance_variable_get('@__awesome_methods__'))
-      arr.reject! { |item| !(item.is_a?(Symbol) || item.is_a?(String)) } # grep block might return crap.
-    end
+    arr.instance_variable_set(:@__awesome_methods__, self.instance_variable_get(:@__awesome_methods__))
+    arr.reject! { |item| !(item.is_a?(Symbol) || item.is_a?(String)) } # grep block might return crap.
     arr
   end
 end

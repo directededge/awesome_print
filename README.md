@@ -5,7 +5,7 @@
 [![Code Climate][code_climate_badge]][code_climate]
 [![Code Climate Coverage][code_climate_coverage_badge]][code_climate]
 [![RubyGems][gem_downloads_badge]][ruby_gems]
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/michaeldv/awesome_print?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/awesome-print/awesome_print?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 Awesome Print is a Ruby library that pretty prints Ruby objects in full color
@@ -21,7 +21,7 @@ v2.0 will *require* Ruby v1.9.3 or later and Rails v3.0 or later.
     $ gem install awesome_print
 
     # Cloning the repository
-    $ git clone git://github.com/michaeldv/awesome_print.git
+    $ git clone git://github.com/awesome-print/awesome_print.git
 
 ### Usage ###
 
@@ -33,34 +33,36 @@ ap object, options = {}
 Default options:
 
 ```ruby
-:indent     => 4,      # Indent using 4 spaces.
-:index      => true,   # Display array indices.
-:html       => false,  # Use ANSI color codes rather than HTML.
-:multiline  => true,   # Display in multiple lines.
-:plain      => false,  # Use colors.
-:raw        => false,  # Do not recursively format object instance variables.
-:sort_keys  => false,  # Do not sort hash keys.
-:limit      => false,  # Limit large output for arrays and hashes. Set to a boolean or integer.
-:color => {
-  :args       => :pale,
-  :array      => :white,
-  :bigdecimal => :blue,
-  :class      => :yellow,
-  :date       => :greenish,
-  :falseclass => :red,
-  :fixnum     => :blue,
-  :float      => :blue,
-  :hash       => :pale,
-  :keyword    => :cyan,
-  :method     => :purpleish,
-  :nilclass   => :red,
-  :rational   => :blue,
-  :string     => :yellowish,
-  :struct     => :pale,
-  :symbol     => :cyanish,
-  :time       => :greenish,
-  :trueclass  => :green,
-  :variable   => :cyanish
+indent:        4,      # Number of spaces for indenting.
+index:         true,   # Display array indices.
+html:          false,  # Use ANSI color codes rather than HTML.
+multiline:     true,   # Display in multiple lines.
+plain:         false,  # Use colors.
+raw:           false,  # Do not recursively format instance variables.
+sort_keys:     false,  # Do not sort hash keys.
+sort_vars:     true,   # Sort instance variables.
+limit:         false,  # Limit arrays & hashes. Accepts bool or int.
+ruby19_syntax: false,  # Use Ruby 1.9 hash syntax in output.
+color: {
+  args:       :pale,
+  array:      :white,
+  bigdecimal: :blue,
+  class:      :yellow,
+  date:       :greenish,
+  falseclass: :red,
+  fixnum:     :blue,
+  float:      :blue,
+  hash:       :pale,
+  keyword:    :cyan,
+  method:     :purpleish,
+  nilclass:   :red,
+  rational:   :blue,
+  string:     :yellowish,
+  struct:     :pale,
+  symbol:     :cyanish,
+  time:       :greenish,
+  trueclass:  :green,
+  variable:   :cyanish
 }
 ```
 
@@ -69,6 +71,13 @@ Supported color names:
 ```ruby
 :gray, :red, :green, :yellow, :blue, :purple, :cyan, :white
 :black, :redish, :greenish, :yellowish, :blueish, :purpleish, :cyanish, :pale
+```
+
+Use `Object#ai` to return an ASCII encoded string:
+
+```ruby
+irb> "awesome print".ai
+=> "\e[0;33m\"awesome print\"\e[0m"
 ```
 
 ### Examples ###
@@ -318,11 +327,10 @@ AwesomePrint.defaults = {
 AwesomePrint follows the [Semantic Versioning](http://semver.org/) standard.
 
 ### Contributing ###
-See [Contributing.md](https://github.com/michaeldv/awesome_print/blob/master/CONTRIBUTING.md)
- for information.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for information.
 
 ### License ###
-Copyright (c) 2010-2013 Michael Dvorkin
+Copyright (c) 2010-2016 Michael Dvorkin and contributors
 
 http://www.dvorkin.net
 
@@ -333,8 +341,8 @@ Released under the MIT license. See LICENSE file for details.
 [gem_version_badge]: https://img.shields.io/gem/v/awesome_print.svg?style=flat
 [gem_downloads_badge]: http://img.shields.io/gem/dt/awesome_print.svg?style=flat
 [ruby_gems]: http://rubygems.org/gems/awesome_print
-[travis_ci]: http://travis-ci.org/michaeldv/awesome_print
-[travis_ci_badge]: https://img.shields.io/travis/michaeldv/awesome_print/master.svg?style=flat
-[code_climate]: https://codeclimate.com/github/michaeldv/awesome_print
-[code_climate_badge]: http://img.shields.io/codeclimate/github/michaeldv/awesome_print.svg?style=flat
-[code_climate_coverage_badge]: https://codeclimate.com/github/michaeldv/awesome_print/badges/coverage.svg
+[travis_ci]: http://travis-ci.org/awesome-print/awesome_print
+[travis_ci_badge]: https://img.shields.io/travis/awesome-print/awesome_print/master.svg?style=flat
+[code_climate]: https://codeclimate.com/github/awesome-print/awesome_print
+[code_climate_badge]: http://img.shields.io/codeclimate/github/awesome-print/awesome_print.svg?style=flat
+[code_climate_coverage_badge]: https://codeclimate.com/github/awesome-print/awesome_print/badges/coverage.svg

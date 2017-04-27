@@ -1,4 +1,4 @@
-# Copyright (c) 2010-2013 Michael Dvorkin
+# Copyright (c) 2010-2016 Michael Dvorkin and contributors
 #
 # Awesome Print is freely distributable under the terms of MIT license.
 # See LICENSE file or http://www.opensource.org/licenses/mit-license.php
@@ -15,7 +15,8 @@ class Class #:nodoc:
 
     define_method name do |*args|
       methods = original_method.bind(self).call(*args)
-      methods.instance_variable_set('@__awesome_methods__', self)
+      methods.instance_variable_set(:@__awesome_methods__, self)
+      methods.extend(AwesomeMethodArray)
       methods
     end
   end

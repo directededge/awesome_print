@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'AwesomePrint/Ripple', skip: ->{ !ExtVerifier.has_ripple? }.call do
+RSpec.describe 'AwesomePrint/Ripple', skip: -> { !ExtVerifier.has_ripple? }.call do
 
   if ExtVerifier.has_ripple?
     before :all do
@@ -20,16 +20,15 @@ RSpec.describe 'AwesomePrint/Ripple', skip: ->{ !ExtVerifier.has_ripple? }.call 
   end
 
   before do
-    stub_dotfile!
-    @ap = AwesomePrint::Inspector.new :plain => true, :sort_keys => true
+    @ap = AwesomePrint::Inspector.new plain: true, sort_keys: true
   end
 
-  it "should print class instance" do
-    user = RippleUser.new :_id => "12345", :first_name => "Al", :last_name => "Capone"
+  it 'should print class instance' do
+    user = RippleUser.new _id: '12345', first_name: 'Al', last_name: 'Capone'
     out = @ap.send :awesome, user
 
-    expect(out.gsub(/0x([a-f\d]+)/, "0x01234567")).to eq <<-EOS.strip
-#<RippleUser:0x01234567> {
+    expect(out).to be_similar_to <<-EOS.strip
+#<RippleUser:placeholder_id> {
            :_id => "12345",
     :first_name => "Al",
      :last_name => "Capone"
@@ -37,7 +36,7 @@ RSpec.describe 'AwesomePrint/Ripple', skip: ->{ !ExtVerifier.has_ripple? }.call 
     EOS
   end
 
-  it "should print the class" do
+  it 'should print the class' do
     expect(@ap.send(:awesome, RippleUser)).to eq <<-EOS.strip
 class RippleUser < Object {
            :_id => :string,

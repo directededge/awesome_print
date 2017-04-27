@@ -1,4 +1,4 @@
-# Copyright (c) 2010-2013 Michael Dvorkin
+# Copyright (c) 2010-2016 Michael Dvorkin and contributors
 #
 # Awesome Print is freely distributable under the terms of MIT license.
 # See LICENSE file or http://www.opensource.org/licenses/mit-license.php
@@ -38,9 +38,7 @@ module AwesomePrint
     #------------------------------------------------------------------------------
     def awesome_nobrainer_document(object)
       data = object.inspectable_attributes.symbolize_keys
-      if object.errors.present?
-        data = {:errors => object.errors, :attributes => data}
-      end
+      data = { errors: object.errors, attributes: data } if object.errors.present?
       "#{object} #{awesome_hash(data)}"
     end
   end

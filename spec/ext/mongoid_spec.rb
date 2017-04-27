@@ -1,45 +1,43 @@
 require 'spec_helper'
 
-RSpec.describe "AwesomePrint/Mongoid", skip: ->{ !ExtVerifier.has_mongoid? }.call do
+RSpec.describe 'AwesomePrint/Mongoid', skip: -> { !ExtVerifier.has_mongoid? }.call do
 
   if ExtVerifier.has_mongoid?
     before :all do
       class MongoUser
         include Mongoid::Document
 
-        field :first_name, :type => String
-        field :last_name,  :type => String
+        field :first_name, type: String
+        field :last_name,  type: String
       end
     end
 
     after :all do
-      Object.instance_eval{ remove_const :MongoUser }
-      Object.instance_eval{ remove_const :Chamelion }
+      Object.instance_eval { remove_const :MongoUser }
+      Object.instance_eval { remove_const :Chamelion }
     end
   end
 
   before do
-    stub_dotfile!
-    @ap = AwesomePrint::Inspector.new :plain => true, :sort_keys => true
+    @ap = AwesomePrint::Inspector.new plain: true, sort_keys: true
   end
 
-  it "should print class instance" do
-    user = MongoUser.new :first_name => "Al", :last_name => "Capone"
+  it 'should print class instance' do
+    user = MongoUser.new first_name: 'Al', last_name: 'Capone'
     out = @ap.send :awesome, user
 
     object_id = user.id.inspect
     str = <<-EOS.strip
-#<MongoUser:0x01234567> {
+#<MongoUser:placeholder_id> {
            :_id => #{object_id},
     :first_name => "Al",
      :last_name => "Capone"
 }
     EOS
-    out.gsub!(/0x([a-f\d]+)/, "0x01234567")
-    expect(out).to eq(str)
+    expect(out).to be_similar_to(str, { skip_bson: true })
   end
 
-  it "should print the class" do
+  it 'should print the class' do
     class_spec = if mongoid_3_0?
                    <<-EOS.strip
 class MongoUser < Object {
@@ -70,7 +68,7 @@ class MongoUser < Object {
     expect(@ap.send(:awesome, MongoUser)).to eq class_spec
   end
 
-  it "should print the class when type is undefined" do
+  it 'should print the class when type is undefined' do
     class Chamelion
       include Mongoid::Document
       field :last_attribute

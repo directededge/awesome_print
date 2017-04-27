@@ -1,4 +1,4 @@
-# Copyright (c) 2010-2013 Michael Dvorkin
+# Copyright (c) 2010-2016 Michael Dvorkin and contributors
 #
 # Awesome Print is freely distributable under the terms of MIT license.
 # See LICENSE file or http://www.opensource.org/licenses/mit-license.php
@@ -15,7 +15,7 @@ module AwesomePrint
     #------------------------------------------------------------------------------
     def cast_with_active_record(object, type)
       cast = cast_without_active_record(object, type)
-      return cast if !defined?(::ActiveRecord)
+      return cast if !defined?(::ActiveRecord::Base)
 
       if object.is_a?(::ActiveRecord::Base)
         cast = :active_record_instance
@@ -42,20 +42,24 @@ module AwesomePrint
       return object.inspect if !defined?(::ActiveSupport::OrderedHash)
       return awesome_object(object) if @options[:raw]
 
-      data = object.class.column_names.inject(::ActiveSupport::OrderedHash.new) do |hash, name|
-        if object.has_attribute?(name) || object.new_record?
-          value = object.respond_to?(name) ? object.send(name) : object.read_attribute(name)
-          hash[name.to_sym] = value
-        end
-        hash
-      end
+      data = if object.class.column_names != object.attributes.keys
+               object.attributes
+             else
+               object.class.column_names.inject(::ActiveSupport::OrderedHash.new) do |hash, name|
+                 if object.has_attribute?(name) || object.new_record?
+                   value = object.respond_to?(name) ? object.send(name) : object.read_attribute(name)
+                   hash[name.to_sym] = value
+                 end
+                 hash
+               end
+             end
       "#{object} " << awesome_hash(data)
     end
 
     # Format ActiveRecord class object.
     #------------------------------------------------------------------------------
     def awesome_active_record_class(object)
-      return object.inspect if !defined?(::ActiveSupport::OrderedHash) || !object.respond_to?(:columns) || object.to_s == "ActiveRecord::Base"
+      return object.inspect if !defined?(::ActiveSupport::OrderedHash) || !object.respond_to?(:columns) || object.to_s == 'ActiveRecord::Base'
       return awesome_class(object) if object.respond_to?(:abstract_class?) && object.abstract_class?
 
       data = object.columns.inject(::ActiveSupport::OrderedHash.new) do |hash, c|

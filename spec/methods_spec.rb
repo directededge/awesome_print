@@ -1,75 +1,71 @@
 require 'spec_helper'
 
-RSpec.describe "Single method" do
-  before do
-    stub_dotfile!
-  end
-
+RSpec.describe 'Single method' do
   after do
-    Object.instance_eval{ remove_const :Hello } if defined?(Hello)
+    Object.instance_eval { remove_const :Hello } if defined?(Hello)
   end
 
-  it "plain: should handle a method with no arguments" do
+  it 'plain: should handle a method with no arguments' do
     method = ''.method(:upcase)
-    expect(method.ai(:plain => true)).to eq('String#upcase()')
+    expect(method.ai(plain: true)).to eq('String#upcase()')
   end
 
-  it "color: should handle a method with no arguments" do
+  it 'color: should handle a method with no arguments' do
     method = ''.method(:upcase)
     expect(method.ai).to eq("\e[1;33mString\e[0m#\e[0;35mupcase\e[0m\e[0;37m()\e[0m")
   end
 
-  it "plain: should handle a method with one argument" do
+  it 'plain: should handle a method with one argument' do
     method = ''.method(:include?)
-    expect(method.ai(:plain => true)).to eq('String#include?(arg1)')
+    expect(method.ai(plain: true)).to eq('String#include?(arg1)')
   end
 
-  it "color: should handle a method with one argument" do
+  it 'color: should handle a method with one argument' do
     method = ''.method(:include?)
     expect(method.ai).to eq("\e[1;33mString\e[0m#\e[0;35minclude?\e[0m\e[0;37m(arg1)\e[0m")
   end
 
-  it "plain: should handle a method with two arguments" do
+  it 'plain: should handle a method with two arguments' do
     method = ''.method(:tr)
-    expect(method.ai(:plain => true)).to eq('String#tr(arg1, arg2)')
+    expect(method.ai(plain: true)).to eq('String#tr(arg1, arg2)')
   end
 
-  it "color: should handle a method with two arguments" do
+  it 'color: should handle a method with two arguments' do
     method = ''.method(:tr)
     expect(method.ai).to eq("\e[1;33mString\e[0m#\e[0;35mtr\e[0m\e[0;37m(arg1, arg2)\e[0m")
   end
 
-  it "plain: should handle a method with multiple arguments" do
+  it 'plain: should handle a method with multiple arguments' do
     method = ''.method(:split)
-    expect(method.ai(:plain => true)).to eq('String#split(*arg1)')
+    expect(method.ai(plain: true)).to eq('String#split(*arg1)')
   end
 
-  it "color: should handle a method with multiple arguments" do
+  it 'color: should handle a method with multiple arguments' do
     method = ''.method(:split)
     expect(method.ai).to eq("\e[1;33mString\e[0m#\e[0;35msplit\e[0m\e[0;37m(*arg1)\e[0m")
   end
 
-  it "plain: should handle a method defined in mixin" do
+  it 'plain: should handle a method defined in mixin' do
     method = ''.method(:is_a?)
-    expect(method.ai(:plain => true)).to eq('String (Kernel)#is_a?(arg1)')
+    expect(method.ai(plain: true)).to eq('String (Kernel)#is_a?(arg1)')
   end
 
-  it "color: should handle a method defined in mixin" do
+  it 'color: should handle a method defined in mixin' do
     method = ''.method(:is_a?)
     expect(method.ai).to eq("\e[1;33mString (Kernel)\e[0m#\e[0;35mis_a?\e[0m\e[0;37m(arg1)\e[0m")
   end
 
-  it "plain: should handle an unbound method" do
+  it 'plain: should handle an unbound method' do
     class Hello
       def world; end
     end
     method = Hello.instance_method(:world)
-    expect(method.ai(:plain => true)).to eq('Hello (unbound)#world()')
+    expect(method.ai(plain: true)).to eq('Hello (unbound)#world()')
   end
 
-  it "color: should handle an unbound method" do
+  it 'color: should handle an unbound method' do
     class Hello
-      def world(a,b); end
+      def world(a, b); end
     end
     method = Hello.instance_method(:world)
     if RUBY_VERSION < '1.9.2'
@@ -80,93 +76,89 @@ RSpec.describe "Single method" do
   end
 end
 
-RSpec.describe "Object methods" do
-  before do
-    stub_dotfile!
-  end
-
+RSpec.describe 'Object methods' do
   after do
-    Object.instance_eval{ remove_const :Hello } if defined?(Hello)
+    Object.instance_eval { remove_const :Hello } if defined?(Hello)
   end
 
-  describe "object.methods" do
-    it "index: should handle object.methods" do
-      out = nil.methods.ai(:plain => true).split("\n").grep(/is_a\?/).first
+  describe 'object.methods' do
+    it 'index: should handle object.methods' do
+      out = nil.methods.ai(plain: true).split("\n").grep(/is_a\?/).first
       expect(out).to match(/^\s+\[\s*\d+\]\s+is_a\?\(arg1\)\s+NilClass \(Kernel\)$/)
     end
 
-    it "no index: should handle object.methods" do
-      out = nil.methods.ai(:plain => true, :index => false).split("\n").grep(/is_a\?/).first
+    it 'no index: should handle object.methods' do
+      out = nil.methods.ai(plain: true, index: false).split("\n").grep(/is_a\?/).first
       expect(out).to match(/^\s+is_a\?\(arg1\)\s+NilClass \(Kernel\)$/)
     end
   end
 
-  describe "object.public_methods" do
-    it "index: should handle object.public_methods" do
-      out = nil.public_methods.ai(:plain => true).split("\n").grep(/is_a\?/).first
+  describe 'object.public_methods' do
+    it 'index: should handle object.public_methods' do
+      out = nil.public_methods.ai(plain: true).split("\n").grep(/is_a\?/).first
       expect(out).to match(/^\s+\[\s*\d+\]\s+is_a\?\(arg1\)\s+NilClass \(Kernel\)$/)
     end
 
-    it "no index: should handle object.public_methods" do
-      out = nil.public_methods.ai(:plain => true, :index => false).split("\n").grep(/is_a\?/).first
+    it 'no index: should handle object.public_methods' do
+      out = nil.public_methods.ai(plain: true, index: false).split("\n").grep(/is_a\?/).first
       expect(out).to match(/^\s+is_a\?\(arg1\)\s+NilClass \(Kernel\)$/)
     end
   end
 
-  describe "object.private_methods" do
-    it "index: should handle object.private_methods" do
-      out = nil.private_methods.ai(:plain => true).split("\n").grep(/sleep/).first
+  describe 'object.private_methods' do
+    it 'index: should handle object.private_methods' do
+      out = nil.private_methods.ai(plain: true).split("\n").grep(/sleep/).first
       expect(out).to match(/^\s+\[\s*\d+\]\s+sleep\(\*arg1\)\s+NilClass \(Kernel\)$/)
     end
 
-    it "no index: should handle object.private_methods" do
-      out = nil.private_methods.ai(:plain => true, :index => false).split("\n").grep(/sleep/).first
+    it 'no index: should handle object.private_methods' do
+      out = nil.private_methods.ai(plain: true, index: false).split("\n").grep(/sleep/).first
       expect(out).to match(/^\s+sleep\(\*arg1\)\s+NilClass \(Kernel\)$/)
     end
   end
 
-  describe "object.protected_methods" do
-    it "index: should handle object.protected_methods" do
+  describe 'object.protected_methods' do
+    it 'index: should handle object.protected_methods' do
       class Hello
         protected
         def m1; end
         def m2; end
       end
-      expect(Hello.new.protected_methods.ai(:plain => true)).to eq("[\n    [0] m1() Hello\n    [1] m2() Hello\n]")
+      expect(Hello.new.protected_methods.ai(plain: true)).to eq("[\n    [0] m1() Hello\n    [1] m2() Hello\n]")
     end
 
-    it "no index: should handle object.protected_methods" do
+    it 'no index: should handle object.protected_methods' do
       class Hello
         protected
-        def m3(a,b); end
+        def m3(a, b); end
       end
       if RUBY_VERSION < '1.9.2'
-        expect(Hello.new.protected_methods.ai(:plain => true, :index => false)).to eq("[\n     m3(arg1, arg2) Hello\n]")
+        expect(Hello.new.protected_methods.ai(plain: true, index: false)).to eq("[\n     m3(arg1, arg2) Hello\n]")
       else
-        expect(Hello.new.protected_methods.ai(:plain => true, :index => false)).to eq("[\n     m3(a, b) Hello\n]")
+        expect(Hello.new.protected_methods.ai(plain: true, index: false)).to eq("[\n     m3(a, b) Hello\n]")
       end
     end
   end
 
-  describe "object.private_methods" do
-    it "index: should handle object.private_methods" do
+  describe 'object.private_methods' do
+    it 'index: should handle object.private_methods' do
       class Hello
         private
         def m1; end
         def m2; end
       end
 
-      out = Hello.new.private_methods.ai(:plain => true).split("\n").grep(/m\d/)
+      out = Hello.new.private_methods.ai(plain: true).split("\n").grep(/m\d/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(\)\s+Hello$/)
       expect(out.last).to  match(/^\s+\[\s*\d+\]\s+m2\(\)\s+Hello$/)
     end
 
-    it "no index: should handle object.private_methods" do
+    it 'no index: should handle object.private_methods' do
       class Hello
         private
-        def m3(a,b); end
+        def m3(a, b); end
       end
-      out = Hello.new.private_methods.ai(:plain => true).split("\n").grep(/m\d/)
+      out = Hello.new.private_methods.ai(plain: true).split("\n").grep(/m\d/)
       if RUBY_VERSION < '1.9.2'
         expect(out.first).to match(/^\s+\[\s*\d+\]\s+m3\(arg1, arg2\)\s+Hello$/)
       else
@@ -175,24 +167,24 @@ RSpec.describe "Object methods" do
     end
   end
 
-  describe "object.singleton_methods" do
-    it "index: should handle object.singleton_methods" do
+  describe 'object.singleton_methods' do
+    it 'index: should handle object.singleton_methods' do
       class Hello
         class << self
           def m1; end
           def m2; end
         end
       end
-      out = Hello.singleton_methods.ai(:plain => true).split("\n").grep(/m\d/)
+      out = Hello.singleton_methods.ai(plain: true).split("\n").grep(/m\d/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(\)\s+Hello$/)
       expect(out.last).to  match(/^\s+\[\s*\d+\]\s+m2\(\)\s+Hello$/)
     end
 
-    it "no index: should handle object.singleton_methods" do
+    it 'no index: should handle object.singleton_methods' do
       class Hello
-        def self.m3(a,b); end
+        def self.m3(a, b); end
       end
-      out = Hello.singleton_methods.ai(:plain => true, :index => false).split("\n").grep(/m\d/)
+      out = Hello.singleton_methods.ai(plain: true, index: false).split("\n").grep(/m\d/)
       if RUBY_VERSION < '1.9.2'
         expect(out.first).to match(/^\s+m3\(arg1, arg2\)\s+Hello$/)
       else
@@ -202,31 +194,27 @@ RSpec.describe "Object methods" do
   end
 end
 
-RSpec.describe "Class methods" do
-  before do
-    stub_dotfile!
-  end
-
+RSpec.describe 'Class methods' do
   after do
-    Object.instance_eval{ remove_const :Hello } if defined?(Hello)
+    Object.instance_eval { remove_const :Hello } if defined?(Hello)
   end
 
-  describe "class.instance_methods" do
-    it "index: should handle unbound class.instance_methods" do
+  describe 'class.instance_methods' do
+    it 'index: should handle unbound class.instance_methods' do
       class Hello
         def m1; end
         def m2; end
       end
-      out = Hello.instance_methods.ai(:plain => true).split("\n").grep(/m\d/)
+      out = Hello.instance_methods.ai(plain: true).split("\n").grep(/m\d/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(\)\s+Hello\s\(unbound\)$/)
       expect(out.last).to  match(/^\s+\[\s*\d+\]\s+m2\(\)\s+Hello\s\(unbound\)$/)
     end
 
-    it "no index: should handle unbound class.instance_methods" do
+    it 'no index: should handle unbound class.instance_methods' do
       class Hello
-        def m3(a,b); end
+        def m3(a, b); end
       end
-      out = Hello.instance_methods.ai(:plain => true, :index => false).split("\n").grep(/m\d/)
+      out = Hello.instance_methods.ai(plain: true, index: false).split("\n").grep(/m\d/)
       if RUBY_VERSION < '1.9.2'
         expect(out.first).to match(/^\s+m3\(arg1, arg2\)\s+Hello\s\(unbound\)$/)
       else
@@ -235,22 +223,22 @@ RSpec.describe "Class methods" do
     end
   end
 
-  describe "class.public_instance_methods" do
-    it "index: should handle class.public_instance_methods" do
+  describe 'class.public_instance_methods' do
+    it 'index: should handle class.public_instance_methods' do
       class Hello
         def m1; end
         def m2; end
       end
-      out = Hello.public_instance_methods.ai(:plain => true).split("\n").grep(/m\d/)
+      out = Hello.public_instance_methods.ai(plain: true).split("\n").grep(/m\d/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(\)\s+Hello\s\(unbound\)$/)
       expect(out.last).to  match(/^\s+\[\s*\d+\]\s+m2\(\)\s+Hello\s\(unbound\)$/)
     end
 
-    it "no index: should handle class.public_instance_methods" do
+    it 'no index: should handle class.public_instance_methods' do
       class Hello
-        def m3(a,b); end
+        def m3(a, b); end
       end
-      out = Hello.public_instance_methods.ai(:plain => true, :index => false).split("\n").grep(/m\d/)
+      out = Hello.public_instance_methods.ai(plain: true, index: false).split("\n").grep(/m\d/)
       if RUBY_VERSION < '1.9.2'
         expect(out.first).to match(/^\s+m3\(arg1, arg2\)\s+Hello\s\(unbound\)$/)
       else
@@ -259,24 +247,24 @@ RSpec.describe "Class methods" do
     end
   end
 
-  describe "class.protected_instance_methods" do
-    it "index: should handle class.protected_instance_methods" do
+  describe 'class.protected_instance_methods' do
+    it 'index: should handle class.protected_instance_methods' do
       class Hello
         protected
         def m1; end
         def m2; end
       end
-      out = Hello.protected_instance_methods.ai(:plain => true).split("\n").grep(/m\d/)
+      out = Hello.protected_instance_methods.ai(plain: true).split("\n").grep(/m\d/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(\)\s+Hello\s\(unbound\)$/)
       expect(out.last).to  match(/^\s+\[\s*\d+\]\s+m2\(\)\s+Hello\s\(unbound\)$/)
     end
 
-    it "no index: should handle class.protected_instance_methods" do
+    it 'no index: should handle class.protected_instance_methods' do
       class Hello
         protected
-        def m3(a,b); end
+        def m3(a, b); end
       end
-      out = Hello.protected_instance_methods.ai(:plain => true, :index => false).split("\n").grep(/m\d/)
+      out = Hello.protected_instance_methods.ai(plain: true, index: false).split("\n").grep(/m\d/)
       if RUBY_VERSION < '1.9.2'
         expect(out.first).to match(/^\s+m3\(arg1, arg2\)\s+Hello\s\(unbound\)$/)
       else
@@ -285,24 +273,24 @@ RSpec.describe "Class methods" do
     end
   end
 
-  describe "class.private_instance_methods" do
-    it "index: should handle class.private_instance_methods" do
+  describe 'class.private_instance_methods' do
+    it 'index: should handle class.private_instance_methods' do
       class Hello
         private
         def m1; end
         def m2; end
       end
-      out = Hello.private_instance_methods.ai(:plain => true).split("\n").grep(/m\d/)
+      out = Hello.private_instance_methods.ai(plain: true).split("\n").grep(/m\d/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(\)\s+Hello\s\(unbound\)$/)
       expect(out.last).to  match(/^\s+\[\s*\d+\]\s+m2\(\)\s+Hello\s\(unbound\)$/)
     end
 
-    it "no index: should handle class.private_instance_methods" do
+    it 'no index: should handle class.private_instance_methods' do
       class Hello
         private
-        def m3(a,b); end
+        def m3(a, b); end
       end
-      out = Hello.private_instance_methods.ai(:plain => true, :index => false).split("\n").grep(/m\d/)
+      out = Hello.private_instance_methods.ai(plain: true, index: false).split("\n").grep(/m\d/)
       if RUBY_VERSION < '1.9.2'
         expect(out.first).to match(/^\s+m3\(arg1, arg2\)\s+Hello\s\(unbound\)$/)
       else
@@ -313,73 +301,73 @@ RSpec.describe "Class methods" do
 end
 
 if RUBY_VERSION >= '1.9.2'
-  RSpec.describe "Ruby 1.9.2+ Method#parameters" do
+  RSpec.describe 'Ruby 1.9.2+ Method#parameters' do
     before do
       stub_dotfile!
     end
 
     after do
-      Object.instance_eval{ remove_const :Hello } if defined?(Hello)
+      Object.instance_eval { remove_const :Hello } if defined?(Hello)
     end
 
-    it "()" do
+    it '()' do
       class Hello
         def m1; end
       end
-      out = Hello.new.methods.ai(:plain => true).split("\n").grep(/m1/)
+      out = Hello.new.methods.ai(plain: true).split("\n").grep(/m1/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(\)\s+Hello$/)
     end
 
-    it ":req" do
+    it ':req' do
       class Hello
         def m1(a, b, c); end
       end
-      out = Hello.new.methods.ai(:plain => true).split("\n").grep(/m1/)
+      out = Hello.new.methods.ai(plain: true).split("\n").grep(/m1/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(a, b, c\)\s+Hello$/)
     end
 
-    it ":opt" do
+    it ':opt' do
       class Hello
         def m1(a, b = 1, c = 2); end # m1(a, *b, *c)
       end
-      out = Hello.new.methods.ai(:plain => true).split("\n").grep(/m1/)
+      out = Hello.new.methods.ai(plain: true).split("\n").grep(/m1/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(a, \*b, \*c\)\s+Hello$/)
     end
 
-    it ":rest" do
+    it ':rest' do
       class Hello
         def m1(*a); end # m1(*a)
       end
-      out = Hello.new.methods.ai(:plain => true).split("\n").grep(/m1/)
+      out = Hello.new.methods.ai(plain: true).split("\n").grep(/m1/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(\*a\)\s+Hello$/)
     end
 
-    it ":block" do
+    it ':block' do
       class Hello
         def m1(a, b = nil, &blk); end # m1(a, *b, &blk)
       end
-      out = Hello.new.methods.ai(:plain => true).split("\n").grep(/m1/)
+      out = Hello.new.methods.ai(plain: true).split("\n").grep(/m1/)
       expect(out.first).to match(/^\s+\[\s*\d+\]\s+m1\(a, \*b, &blk\)\s+Hello$/)
     end
   end
 end
 
-RSpec.describe "Methods arrays" do
+RSpec.describe 'Methods arrays' do
   after do
-    Object.instance_eval{ remove_const :Hello } if defined?(Hello)
-    Object.instance_eval{ remove_const :World } if defined?(World)
+    Object.instance_eval { remove_const :Hello } if defined?(Hello)
+    Object.instance_eval { remove_const :World } if defined?(World)
   end
 
-  it "obj1.methods - obj2.methods should be awesome printed" do
+  it 'obj1.methods - obj2.methods should be awesome printed' do
     stub_dotfile!
     class Hello
       def self.m1; end
     end
-    out = (Hello.methods - Class.methods).ai(:plain => true)
+    out = (Hello.methods - Class.methods).ai(plain: true)
     expect(out).to eq("[\n    [0] m1() Hello\n]")
   end
 
-  it "obj1.methods & obj2.methods should be awesome printed" do
+  it 'obj1.methods & obj2.methods should be awesome printed' do
     stub_dotfile!
     class Hello
       def self.m1; end
@@ -388,24 +376,24 @@ RSpec.describe "Methods arrays" do
     class World
       def self.m1; end
     end
-    out = (Hello.methods & World.methods - Class.methods).ai(:plain => true)
+    out = (Hello.methods & World.methods - Class.methods).ai(plain: true)
     expect(out).to eq("[\n    [0] m1() Hello\n]")
   end
 
-  it "obj1.methods.grep(pattern) should be awesome printed" do
+  it 'obj1.methods.grep(pattern) should be awesome printed' do
     stub_dotfile!
     class Hello
       def self.m1; end
       def self.m2; end
       def self.m3; end
     end
-    out = Hello.methods.grep(/^m1$/).ai(:plain => true)
+    out = Hello.methods.grep(/^m1$/).ai(plain: true)
     expect(out).to eq("[\n    [0] m1() Hello\n]")
-    out = Hello.methods.grep(/^m\d$/).ai(:plain => true)
+    out = Hello.methods.grep(/^m\d$/).ai(plain: true)
     expect(out).to eq("[\n    [0] m1() Hello\n    [1] m2() Hello\n    [2] m3() Hello\n]")
   end
 
-  it "obj1.methods.grep(pattern, &block) should pass the matching string within the block" do
+  it 'obj1.methods.grep(pattern, &block) should pass the matching string within the block' do
     class Hello
       def self.m_one; end
       def self.m_two; end
@@ -415,7 +403,7 @@ RSpec.describe "Methods arrays" do
     expect(out).to eq([:one, :two])
   end
 
-  it "obj1.methods.grep(pattern, &block) should be awesome printed" do
+  it 'obj1.methods.grep(pattern, &block) should be awesome printed' do
     stub_dotfile!
     class Hello
       def self.m0; end
@@ -424,12 +412,12 @@ RSpec.describe "Methods arrays" do
       def self.one; end
     end
 
-    out = Hello.methods.grep(/^m(\d)$/) { %w(none one)[$1.to_i] }.ai(:plain => true)
+    out = Hello.methods.grep(/^m(\d)$/) { %w(none one)[$1.to_i] }.ai(plain: true)
     expect(out).to eq("[\n    [0] none() Hello\n    [1]  one() Hello\n]")
   end
 
-  # See https://github.com/michaeldv/awesome_print/issues/30 for details.
-  it "grepping methods and converting them to_sym should work as expected" do
+  # See https://github.com/awesome-print/awesome_print/issues/30 for details.
+  it 'grepping methods and converting them to_sym should work as expected' do
     class Hello
       private
       def him; end
@@ -444,16 +432,16 @@ RSpec.describe "Methods arrays" do
     end
 
     hello = Hello.new
-    expect((hello.send(:his) - hello.send(:her)).sort_by { |x| x.to_s }).to eq([ :him, :his ])
+    expect((hello.send(:his) - hello.send(:her)).sort_by { |x| x.to_s }).to eq([:him, :his])
   end
 
-  it "appending garbage to methods array should not raise error" do
-    arr = 42.methods << [ :wtf ]
-    expect { arr.ai(:plain => true) }.not_to raise_error
+  it 'appending garbage to methods array should not raise error' do
+    arr = 42.methods << [:wtf]
+    expect { arr.ai(plain: true) }.not_to raise_error
     if RUBY_VERSION < '1.9.2'
-      expect(arr.ai(:plain => true)).to match(/\s+wtf\(\?\)\s+\?/)      # [ :wtf ].to_s => "wtf"
+      expect(arr.ai(plain: true)).to match(/\s+wtf\(\?\)\s+\?/)      # [ :wtf ].to_s => "wtf"
     else
-      expect(arr.ai(:plain => true)).to match(/\s+\[:wtf\]\(\?\)\s+\?/) # [ :wtf ].to_s => [:wtf]
+      expect(arr.ai(plain: true)).to match(/\s+\[:wtf\]\(\?\)\s+\?/) # [ :wtf ].to_s => [:wtf]
     end
   end
 end

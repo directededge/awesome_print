@@ -1,4 +1,4 @@
-# Copyright (c) 2010-2013 Michael Dvorkin
+# Copyright (c) 2010-2016 Michael Dvorkin and contributors
 #
 # Awesome Print is freely distributable under the terms of MIT license.
 # See LICENSE file or http://www.opensource.org/licenses/mit-license.php
@@ -15,7 +15,7 @@ module AwesomePrint
     #------------------------------------------------------------------------------
     def cast_with_nokogiri(object, type)
       cast = cast_without_nokogiri(object, type)
-      if (defined?(::Nokogiri::XML::Node) && object.is_a?(::Nokogiri::XML::Node)) || 
+      if (defined?(::Nokogiri::XML::Node) && object.is_a?(::Nokogiri::XML::Node)) ||
          (defined?(::Nokogiri::XML::NodeSet) && object.is_a?(::Nokogiri::XML::NodeSet))
         cast = :nokogiri_xml_node
       end
@@ -25,9 +25,9 @@ module AwesomePrint
     #------------------------------------------------------------------------------
     def awesome_nokogiri_xml_node(object)
       if object.is_a?(::Nokogiri::XML::NodeSet) && object.empty?
-        return "[]"
+        return '[]'
       end
-      xml = object.to_xml(:indent => 2)
+      xml = object.to_xml(indent: 2)
       #
       # Colorize tag, id/class name, and contents.
       #

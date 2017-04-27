@@ -1,4 +1,4 @@
-# Copyright (c) 2010-2013 Michael Dvorkin
+# Copyright (c) 2010-2016 Michael Dvorkin and contributors
 #
 # Awesome Print is freely distributable under the terms of MIT license.
 # See LICENSE file or http://www.opensource.org/licenses/mit-license.php
@@ -18,7 +18,7 @@ module AwesomePrint
       cast = cast_without_mongo_mapper(object, type)
 
       if defined?(::MongoMapper::Document)
-        if object.is_a?(Class) && (object.ancestors & [ ::MongoMapper::Document, ::MongoMapper::EmbeddedDocument ]).size > 0
+        if object.is_a?(Class) && (object.ancestors & [::MongoMapper::Document, ::MongoMapper::EmbeddedDocument]).size > 0
           cast = :mongo_mapper_class
         elsif object.is_a?(::MongoMapper::Document) || object.is_a?(::MongoMapper::EmbeddedDocument)
           cast = :mongo_mapper_instance
@@ -38,7 +38,7 @@ module AwesomePrint
       return object.inspect if !defined?(::ActiveSupport::OrderedHash) || !object.respond_to?(:keys)
 
       data = object.keys.sort.inject(::ActiveSupport::OrderedHash.new) do |hash, c|
-        hash[c.first] = (c.last.type || "undefined").to_s.underscore.intern
+        hash[c.first] = (c.last.type || 'undefined').to_s.underscore.intern
         hash
       end
 
@@ -65,7 +65,7 @@ module AwesomePrint
       return object.inspect if !defined?(::ActiveSupport::OrderedHash)
       return awesome_object(object) if @options[:raw]
 
-      data = object.keys.keys.sort_by{|k| k}.inject(::ActiveSupport::OrderedHash.new) do |hash, name|
+      data = object.keys.keys.sort_by { |k| k }.inject(::ActiveSupport::OrderedHash.new) do |hash, name|
         hash[name] = object[name]
         hash
       end
@@ -73,11 +73,11 @@ module AwesomePrint
       # Add in associations
       if @options[:mongo_mapper][:show_associations]
         object.associations.each do |name, assoc|
-          if @options[:mongo_mapper][:inline_embedded] and assoc.embeddable?
-            data[name.to_s] = object.send(name)
-          else
-            data[name.to_s] = assoc
-          end
+          data[name.to_s] = if @options[:mongo_mapper][:inline_embedded] and assoc.embeddable?
+                              object.send(name)
+                            else
+                              assoc
+                            end
         end
       end
 
@@ -93,7 +93,7 @@ module AwesomePrint
       return object.inspect if !defined?(::ActiveSupport::OrderedHash)
       return awesome_object(object) if @options[:raw]
 
-      association = object.class.name.split('::').last.titleize.downcase.sub(/ association$/,'')
+      association = object.class.name.split('::').last.titleize.downcase.sub(/ association$/, '')
       association = "embeds #{association}" if object.embeddable?
       class_name = object.class_name
 
@@ -111,8 +111,8 @@ module AwesomePrint
     def apply_default_mongo_mapper_options
       @options[:color][:assoc] ||= :greenish
       @options[:mongo_mapper]  ||= {
-        :show_associations => false, # Display association data for MongoMapper documents and classes.
-        :inline_embedded => false    # Display embedded associations inline with MongoMapper documents.
+        show_associations: false, # Display association data for MongoMapper documents and classes.
+        inline_embedded: false    # Display embedded associations inline with MongoMapper documents.
       }
     end
   end

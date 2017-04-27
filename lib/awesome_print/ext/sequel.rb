@@ -1,4 +1,4 @@
-# Copyright (c) 2010-2013 Michael Dvorkin
+# Copyright (c) 2010-2016 Michael Dvorkin and contributors
 #
 # Awesome Print is freely distributable under the terms of MIT license.
 # See LICENSE file or http://www.opensource.org/licenses/mit-license.php
@@ -32,9 +32,7 @@ module AwesomePrint
         hash[c[0].to_sym] = c[1]
         hash
       end
-      if !object.errors.empty?
-        data = {:errors => object.errors, :values => data}
-      end
+      data = { errors: object.errors, values: data } if !object.errors.empty?
       "#{object} #{awesome_hash(data)}"
     end
 
@@ -47,8 +45,8 @@ module AwesomePrint
     # Format Sequel Model class.
     #------------------------------------------------------------------------------
     def awesome_sequel_model_class(object)
-      data = object.db_schema.inject({}) {|h, (name,data)| h.merge(name => data[:db_type])}
-      "class #{object} < #{object.superclass} " << awesome_hash(data)
+      result = object.db_schema.inject({}) { |h, (name, data)| h.merge(name => data[:db_type]) }
+      "class #{object} < #{object.superclass} " << awesome_hash(result)
     end
   end
 
