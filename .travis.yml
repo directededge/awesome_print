@@ -1,32 +1,31 @@
 language: ruby
+cache: bundler
+
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1
-  - 2.2.5
-  - 2.3.1
+  - 2.3
+  - 2.4
+  - 2.5
+  - ruby-head
 
 before_install:
   - gem install bundler
 
 gemfile:
-  - gemfiles/rails_3.2.gemfile
-  - gemfiles/rails_4.0.gemfile
-  - gemfiles/rails_4.1.gemfile
-  - gemfiles/rails_4.2.gemfile
+  # ignore 4.2 for now as the cost to run these tests is too high
+  # - gemfiles/rails_4.2.gemfile
   - gemfiles/rails_5.0.gemfile
-  - gemfiles/mongoid_3.1.gemfile
-  - gemfiles/nobrainer.gemfile
+  - gemfiles/rails_5.1.gemfile
+  - gemfiles/rails_5.2.gemfile
+  - gemfiles/mongoid_4.0.gemfile
+  - gemfiles/mongoid_5.0.gemfile
+  - gemfiles/mongoid_6.0.gemfile
 
 matrix:
-  exclude:
-    # Rails 5.0 only works with Ruby >= 2.2
-    - rvm: 1.9.3
-      gemfile: gemfiles/rails_5.0.gemfile
-    - rvm: 2.0.0
-      gemfile: gemfiles/rails_5.0.gemfile
-    - rvm: 2.1
-      gemfile: gemfiles/rails_5.0.gemfile
+  include:
+    - rvm: ruby-head
+      env: RUBYOPT="--enable-frozen-string-literal"
+  # allow_failures:
+  #   - rvm: ruby-head
 
 addons:
   code_climate:

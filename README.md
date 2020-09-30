@@ -43,6 +43,8 @@ sort_keys:     false,  # Do not sort hash keys.
 sort_vars:     true,   # Sort instance variables.
 limit:         false,  # Limit arrays & hashes. Accepts bool or int.
 ruby19_syntax: false,  # Use Ruby 1.9 hash syntax in output.
+class_name:    :class, # Method called to report the instance class name. (e.g. :to_s)
+object_id:     true,   # Show object id.
 color: {
   args:       :pale,
   array:      :white,
@@ -50,7 +52,7 @@ color: {
   class:      :yellow,
   date:       :greenish,
   falseclass: :red,
-  fixnum:     :blue,
+  integer:    :blue,
   float:      :blue,
   hash:       :pale,
   keyword:    :cyan,
@@ -305,6 +307,14 @@ With other web frameworks (ex: in Sinatra templates) you can explicitly request 
 formatting:
 
     <%= ap @accounts.first, :html => true %>
+    
+### String Convenience Methods ###
+Use methods such as `.red` to set string color:
+
+```ruby
+irb> puts "red text".red
+red text # (it's red)
+```
 
 ### Setting Custom Defaults ###
 You can set your own default options by creating ``.aprc`` file in your home
