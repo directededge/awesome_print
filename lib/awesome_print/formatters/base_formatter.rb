@@ -63,7 +63,7 @@ module AwesomePrint
       end
 
 
-      def method_tuple(method)
+      def method_tuple(method, &block)
         if method.respond_to?(:parameters) # Ruby 1.9.2+
           # See http://readruby.chengguangnan.com/methods#method-objects-parameters
           # (mirror: http://archive.is/XguCA#selection-3381.1-3381.11)
@@ -72,13 +72,16 @@ module AwesomePrint
             arr << case type
               when :req        then name.to_s
               when :opt, :rest then "*#{name}"
-              when :block      then "&#{name}"
               else '?'
             end
           end
         else # See http://ruby-doc.org/core/classes/Method.html#M001902
           args = (1..method.arity.abs).map { |i| "arg#{i}" }
           args[-1] = "*#{args[-1]}" if method.arity < 0
+        end
+
+        if block
+          arr << "&#{name}"
         end
 
         # method.to_s formats to handle:
@@ -109,8 +112,8 @@ module AwesomePrint
         inspector.current_indentation
       end
 
-      def indented
-        inspector.increase_indentation(&Proc.new)
+      def indented(&block)
+        inspector.increase_indentation(&block)
       end
 
       def indent
